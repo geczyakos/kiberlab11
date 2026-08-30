@@ -5,7 +5,9 @@ export async function withRetry(fn, maxAttempts = 3, delayMs = 1000) {
       return await fn();
     } catch (err) {
       lastError = err;
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      if (i < maxAttempts - 1) {
+        await new Promise((resolve) => setTimeout(resolve, delayMs * (i + 1)));
+      }
     }
   }
   throw lastError;
